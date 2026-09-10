@@ -1,8 +1,8 @@
 # MINI-PROJECT SHORT TECHNICAL REPORT
 **Course:** Cross-Platform Mobile App Development (VKU)  
-**Mini-Project Title:** Mini-Project 1: VKU Field Survey — Offline Data Collection (PWA & Capacitor)  
+**Mini-Project Title:** Mini-Project 1: VKU Field Survey — Offline Data Collection (Capacitor Android & PWA)  
 **Team / Student Name:** Nguyễn Trung Nguyên   
-**Submission Date:** 03/09/2026  
+**Submission Date:** 10/09/2026  
 
 ---
 
@@ -10,7 +10,7 @@
 * **Team Members:**
   1. Nguyễn Trung Nguyên — Student ID: 23ITB.B143 — Role: Fullstack Architecture, PWA & State Management — Contribution: 100%
 * **🔗 Live Demo URL:** [https://miniproject--field-survey.pages.dev](https://miniproject--field-survey.pages.dev)
-* **💻 GitHub Repository:** [https://github.com/Rinproplayer/miniproject--Field-Survey.git](https://github.com/Rinproplayer/miniproject--Field-Survey.git)
+* **💻 GitHub Repository:** [https://github.com/Rinproplayer/miniproject--Field-SurveyApp.git](https://github.com/Rinproplayer/miniproject--Field-SurveyApp.git)
 * **🎥 Video Demo (Optional):**
   - **Video 1 (Màn hình Desktop / PWA Test & Offline Sync):** [Screen Recording 2026-09-03 151328.mp4](./Screen%20Recording%202026-09-03%20151328.mp4)
   - **Video 2 (Thực nghiệm trên thiết bị di động / Mobile Screen Recording):** [1788423309133_2071063104022555579_9030307350361711956.mp4](./1788423309133_2071063104022555579_9030307350361711956.mp4)
@@ -23,7 +23,7 @@
 | 1 | **PWA Standalone Installation & App Shell Cache** | ✅ Complete | Cấu hình đầy đủ `manifest.json` (`display: standalone`, `theme_color: #0284c7`, bộ icons 192x192 & 512x512 có maskable). Service Worker (`sw.js`) áp dụng chiến lược **Cache-First** đối với App Shell (HTML, CSS, JS, Icons) đảm bảo khởi động tức thì <1s trong điều kiện 100% Offline. Hỗ trợ cài đặt trên cả Android và iOS Safari. |
 | 2 | **Multi-Step Form & Local Draft Persistence** | ✅ Complete | Thiết kế form 3 bước chuyên nghiệp (Vị trí & Thiết bị hiện tại -> Nhu cầu & Đánh giá 1-5 Sao -> Bằng chứng ảnh & Ghi chú). Tích hợp cơ chế tự động lưu nháp thời gian thực (Debounced Auto-Save) vào **IndexedDB** (`idb`), chống mất dữ liệu khi F5 hoặc tắt trình duyệt đột ngột. |
 | 3 | **Offline Queue & Automatic Background Sync** | ✅ Complete | Mỗi phiếu nộp ngoại tuyến được cấp phát mã định danh UUID v4, đóng dấu thời gian ISO 8601 và gán trạng thái `PENDING_SYNC`. Lắng nghe sự kiện `window.addEventListener('online')` và Service Worker Background Sync để tự động gửi dữ liệu tuần tự (FIFO) ngay khi có mạng trở lại. |
-| 4 | **Capacitor Native APK Integration** | ✅ Complete | Tích hợp thư viện `@capacitor/camera` phục vụ chụp ảnh thực địa và `@capacitor/network` theo dõi trạng thái mạng theo thời gian thực (kèm cơ chế fallback tự động cho trình duyệt Web PWA). File cấu hình `capacitor.config.ts` sẵn sàng xuất bản Android APK. |
+| 4 | **Capacitor Native APK Integration** | ✅ Complete | Khởi tạo và cấu hình hoàn chỉnh nền tảng Android trong thư mục `android/`. Tích hợp `@capacitor/camera` gọi camera native của Android và `@capacitor/network` theo dõi mạng theo thời gian thực (kèm cơ chế fallback mượt mà cho Web PWA). Cấu hình quyền phần cứng trong `AndroidManifest.xml`, biên dịch Gradle 8.14 & JVM 21 thành công 100% (`BUILD SUCCESSFUL`), sẵn sàng xuất file cài đặt `app-debug.apk` và chạy trên máy ảo Android (Pixel 8 Pro API 35) cũng như thiết bị thật. |
 | 5 | **Google Sheets Database & Analytics Dashboard** | ✅ Complete | Kết nối đồng bộ trực tiếp vào cơ sở dữ liệu Google Sheets thông qua Google Apps Script Webhook. Dashboard trực quan hóa thị phần thương hiệu, phân khúc giá, tỷ lệ hài lòng và hỗ trợ xuất dữ liệu ra file **CSV (Excel tiếng Việt)** & **JSON**. |
 
 ---
@@ -68,6 +68,8 @@
 ```
 
 ### 3.2. Cấu Trúc Thư Mục Dự Án (Modular Structure)
+* `android/`: Dự án Native Android đóng gói bởi Capacitor, chứa `AndroidManifest.xml` (cấu hình quyền Camera, Network, Storage), `MainActivity.java` và hệ thống build Gradle.
+* `capacitor.config.ts`: Cấu hình định danh ứng dụng Android (`vn.udn.vku.fieldsurvey`, tên app `VKU Field Survey`).
 * `public/manifest.json`: Web App Manifest tiêu chuẩn PWA với theme màu `#0284c7`.
 * `public/sw.js`: Service Worker quản lý vòng đời (Install -> Activate -> Fetch -> Sync) với chiến lược Cache-First.
 * `src/types/survey.ts`: Hệ thống kiểu dữ liệu TypeScript nghiêm ngặt (Models, Status Enums, Interfaces).
@@ -118,3 +120,8 @@
 ### Thách thức 3: Trải nghiệm cài đặt PWA khác biệt trên hệ điều hành iOS
 * **Nguyên nhân:** Apple không hỗ trợ sự kiện chuẩn `beforeinstallprompt` trên trình duyệt iOS Safari, khiến nút cài đặt PWA thông thường không thể hoạt động như trên Android.
 * **Giải pháp:** Xây dựng module nhận diện thiết bị thông qua `userAgent`. Khi phát hiện người dùng truy cập từ iPhone/iPad, ứng dụng tự động hiển thị popup hướng dẫn trực quan 3 bước: Bấm nút **Chia sẻ (Share)** ở thanh đáy Safari -> Chọn **Thêm vào Màn hình chính (Add to Home Screen)**.
+
+### Thách thức 4: Tương thích phiên bản Gradle & JVM khi biên dịch Native Android trên Capacitor
+* **Nguyên nhân:** Môi trường Android Studio hiện đại tích hợp Java phiên bản rất mới (như Java 25), trong khi Gradle 8.14 hỗ trợ từ Java 8 đến 24, dẫn đến xung đột phiên bản `Incompatible Gradle JVM version`. Đồng thời, quyền bảo vệ thư mục hệ thống Windows (`C:\Program Files`) có thể chặn việc ghi file lock của Gradle nếu trỏ sai thư mục cache.
+* **Giải pháp:** Cấu hình Gradle JVM sang JetBrains Runtime Java 21 LTS (`jbr-21`) tương thích chuẩn xác, trỏ thư mục cache `GRADLE_USER_HOME` về thư mục người dùng (`C:\Users\<User>\.gradle`) để cấp đầy đủ quyền ghi. Dự án sau đó biên dịch 100% thành công (`BUILD SUCCESSFUL`) và liên kết mượt mà với thiết bị máy ảo Pixel 8 Pro.
+
