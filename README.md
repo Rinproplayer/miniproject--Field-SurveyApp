@@ -1,25 +1,25 @@
-# VKU Field Survey — Ứng Dụng Khảo Sát Thị Trường Nhu Cầu Sử Dụng Điện Thoại (PWA & Capacitor)
+# VKU Field Survey — Ứng Dụng Khảo Sát Thị Trường Nhu Cầu Sử Dụng Điện Thoại (Capacitor & PWA)
 
 > **Môn học:** Phát triển Ứng dụng Di động Đa nền tảng (Cross-Platform Mobile App Development)  
 > **Khoa:** Khoa Công nghệ Thông tin, Trường Đại học Công nghệ Thông tin & Truyền thông Việt - Hàn (VKU)  
 > **Giảng viên hướng dẫn:** TS. Nguyễn Thanh Tuấn  
 > **Sinh viên thực hiện:** Nguyễn Thanh Toàn (23ITB)  
-> **GitHub Repository:** [https://github.com/Rinproplayer/miniproject--Field-Survey.git](https://github.com/Rinproplayer/miniproject--Field-Survey.git)
+> **GitHub Repository:** [https://github.com/Rinproplayer/miniproject--Field-SurveyApp.git](https://github.com/Rinproplayer/miniproject--Field-SurveyApp.git)
 
 ---
 
 ## 📱 Giới Thiệu Dự Án
 
-Ứng dụng **VKU Field Survey (Smartphone Market Demand)** là giải pháp thu thập dữ liệu điều tra thị trường thực địa hoạt động theo kiến trúc **Offline-First**. Ứng dụng được thiết kế chuyên biệt cho điều tra viên và sinh viên thực hiện khảo sát thị hiếu, nhu cầu sử dụng điện thoại thông minh ngay tại các khu vực mất sóng Wi-Fi/4G (như tầng hầm giảng đường VKU, khu vực xa xôi hoặc môi trường không có kết nối Internet).
+Ứng dụng **VKU Field Survey (Smartphone Market Demand)** là giải pháp thu thập dữ liệu điều tra thị trường thực địa hoạt động theo kiến trúc **Offline-First**, được phát triển dưới dạng **Ứng dụng Di động Android (Capacitor)** kết hợp **Progressive Web App (PWA)**. Ứng dụng được thiết kế chuyên biệt cho điều tra viên và sinh viên thực hiện khảo sát thị hiếu, nhu cầu sử dụng điện thoại thông minh ngay tại các khu vực mất sóng Wi-Fi/4G (như tầng hầm giảng đường VKU, khu vực xa xôi hoặc môi trường không có kết nối Internet).
 
 Toàn bộ các tiêu chí kỹ thuật cốt lõi của đề tài **VKU Campus Facility Inspection** được ánh xạ và áp dụng trọn vẹn vào bài toán điều tra thị trường điện thoại:
 
 | Tiêu Chí Kỹ Thuật Đề Bài VKU | Hiện Thực Trong Ứng Dụng Khảo Sát Điện Thoại | Mức Độ Đạt Được |
 |---|---|:---:|
-| **1. PWA Standalone & Cache-First** | `manifest.json` chuẩn màu sắc `#0284c7`, `display: standalone`, icons 192x192 & 512x512. Service Worker (`sw.js`) cache App Shell theo chiến lược **Cache-First** cho tốc độ khởi động <1s offline. | 100% |
-| **2. Multi-step Form & Lưu Nháp IndexedDB** | Form 3 bước (Địa bàn & Thông tin đối tượng -> Nhu cầu & Đánh giá 1-5 Sao -> Bằng chứng ảnh & Ghi chú). Tự động lưu nháp thời gian thực vào IndexedDB qua `idb`. | 100% |
+| **1. Mobile Native Container & PWA** | Tích hợp **Capacitor 8** đóng gói thành ứng dụng Android native độc lập (`app-debug.apk`), song song App Shell PWA `display: standalone`, icons 192x192 & 512x512. | 100% |
+| **2. Multi-step Form & Lưu Nháp IndexedDB** | Form 3 bước (Địa bàn & Thiết bị -> Nhu cầu & Đánh giá 1-5 Sao -> Bằng chứng ảnh & Ghi chú). Tự động lưu nháp thời gian thực (Real-time Draft Auto-Save) vào IndexedDB qua `idb`. | 100% |
 | **3. Offline Queue & Background Sync** | Phiếu nộp offline được gắn UUID v4, timestamp ISO, trạng thái `PENDING_SYNC`. Lắng nghe `window.ononline` và Service Worker Background Sync để tự động gửi dữ liệu tuần tự khi có mạng. | 100% |
-| **4. Capacitor Bridge (Camera & Network)** | Tích hợp `@capacitor/camera` chụp ảnh thiết bị thực địa và `@capacitor/network` theo dõi trạng thái mạng, có fallback mượt mà cho Web PWA. | 100% |
+| **4. Capacitor Bridge (Camera & Network)** | Tích hợp `@capacitor/camera` gọi camera Android native chụp ảnh thực địa và `@capacitor/network` theo dõi trạng thái mạng, có fallback mượt mà cho Web PWA. | 100% |
 | **5. Database Google Sheets & Thống Kê** | Hỗ trợ đẩy dữ liệu trực tiếp vào Google Sheets qua Apps Script Webhook. Dashboard biểu đồ thống kê thị phần & xuất file CSV (Excel tiếng Việt), JSON. | 100% |
 
 ---
@@ -55,46 +55,52 @@ Toàn bộ các tiêu chí kỹ thuật cốt lõi của đề tài **VKU Campus
 ## 🛠️ Cấu Trúc Mã Nguồn (Project Structure)
 
 ```text
-miniproject-Field-Survey/
-├── public/
+miniproject--Field-SurveyApp/
+├── android/                         # Dự án Native Android (Capacitor Platform)
+│   ├── app/
+│   │   ├── src/main/
+│   │   │   ├── AndroidManifest.xml  # Cấu hình quyền Camera, Network, Storage
+│   │   │   ├── java/.../MainActivity.java # Android Activity chính
+│   │   │   └── res/                 # Icons, Splash Screen native đa kích thước
+│   │   └── build.gradle             # Cấu hình Gradle cấp ứng dụng
+│   ├── build.gradle                 # Cấu hình Gradle cấp dự án
+│   └── variables.gradle             # Phiên bản Android SDK (Compile: 35, Min: 24)
+├── public/                          # Tài nguyên tĩnh & PWA App Shell
 │   ├── favicon.svg
-│   ├── manifest.json              # Web App Manifest PWA (theme: #0284c7)
-│   ├── sw.js                      # Service Worker (Cache-First & Background Sync)
-│   └── icons/
-│       ├── icon-192x192.png       # PWA Icon 192x192
-│       ├── icon-512x512.png       # PWA Icon 512x512
-│       └── ...                    # Maskable icons
-├── src/
+│   ├── manifest.json                # Web App Manifest PWA (theme: #0284c7)
+│   ├── sw.js                        # Service Worker (Cache-First & Background Sync)
+│   └── icons/                       # Icons PWA chuẩn 192x192 & 512x512
+├── src/                             # Mã nguồn chính (React + TypeScript)
 │   ├── types/
-│   │   └── survey.ts              # Data Models, Enums & TypeScript Interfaces
+│   │   └── survey.ts                # Data Models, Enums & TypeScript Interfaces
 │   ├── services/
-│   │   ├── db.ts                  # Tầng tương tác IndexedDB (idb)
-│   │   ├── sync.ts                # Auto-sync queue, FIFO dispatcher & Google Sheets
-│   │   ├── network.ts             # Theo dõi mạng qua @capacitor/network + Web API
-│   │   └── camera.ts              # Wrapper @capacitor/camera + Web Media Fallback
+│   │   ├── db.ts                    # Tầng tương tác IndexedDB (idb)
+│   │   ├── sync.ts                  # Auto-sync queue, FIFO dispatcher & Google Sheets
+│   │   ├── network.ts               # Theo dõi mạng qua @capacitor/network + Web API
+│   │   └── camera.ts                # Wrapper @capacitor/camera + Web Media Fallback
 │   ├── components/
-│   │   ├── NetworkBanner.tsx      # Thanh thông báo Online/Offline & Test Offline
-│   │   ├── MultiStepForm.tsx      # Form khảo sát 3 bước + Auto-save Draft
-│   │   ├── SurveyQueueList.tsx    # Danh sách PENDING_SYNC & SYNCED + Quản lý
-│   │   ├── StatisticsDashboard.tsx# Biểu đồ phân tích thị trường & Xuất CSV/JSON
+│   │   ├── NetworkBanner.tsx        # Thanh thông báo Online/Offline & Test Offline
+│   │   ├── MultiStepForm.tsx        # Form khảo sát 3 bước + Auto-save Draft
+│   │   ├── SurveyQueueList.tsx      # Danh sách PENDING_SYNC & SYNCED + Quản lý
+│   │   ├── StatisticsDashboard.tsx  # Biểu đồ phân tích thị trường & Xuất CSV/JSON
 │   │   ├── GoogleSheetsConfigModal.tsx # Cấu hình Webhook Google Sheets
-│   │   └── InstallPrompt.tsx      # Hộp thoại cài đặt PWA Standalone
-│   ├── App.tsx                    # Giao diện chính và hệ thống Tab Navigation
-│   ├── main.tsx                   # Entrypoint React
-│   └── index.css                  # Tailwind CSS v4 & Mobile Viewport Styling
-├── capacitor.config.ts            # Cấu hình Capacitor Android
-├── package.json                   # Dependencies & Scripts
-├── tsconfig.json                  # TypeScript Configuration
-├── vite.config.ts                 # Cấu hình Vite & Tailwind plugin
-├── REPORT.md                      # Báo cáo kỹ thuật chuẩn mẫu môn học VKU
-└── README.md                      # Hướng dẫn chi tiết dự án
+│   │   └── InstallPrompt.tsx        # Hộp thoại cài đặt PWA Standalone
+│   ├── App.tsx                      # Giao diện chính và hệ thống Tab Navigation
+│   ├── main.tsx                     # Entrypoint React
+│   └── index.css                    # Tailwind CSS v4 & Mobile Viewport Styling
+├── capacitor.config.ts              # Cấu hình Capacitor Android
+├── package.json                     # Dependencies & Scripts (cap:sync, cap:open)
+├── tsconfig.json                    # TypeScript Configuration
+├── vite.config.ts                   # Cấu hình Vite & Tailwind plugin
+├── REPORT.md                        # Báo cáo kỹ thuật chuẩn mẫu môn học VKU
+└── README.md                        # Hướng dẫn chi tiết dự án
 ```
 
 ---
 
 ## 💻 Hướng Dẫn Cài Đặt & Chạy Thử Nghiệm
 
-### 1. Khởi chạy ở môi trường phát triển (Local Development)
+### 1. Khởi chạy ở môi trường Web (Local Development)
 ```bash
 # Cài đặt các gói thư viện
 npm install
@@ -121,20 +127,25 @@ Mở trình duyệt tại địa chỉ: `http://localhost:5173`
    - Nộp 1-2 phiếu khảo sát > Phiếu được lưu với nhãn màu vàng `PENDING_SYNC`.
    - Bấm tắt "Test Offline" (hoặc kết nối lại mạng) > Ứng dụng tự động phát hiện mạng và gửi toàn bộ các phiếu lên server tuần tự, chuyển thành `SYNCED`.
 
-### 3. Đóng gói ứng dụng Android bằng Capacitor
+### 3. Vận hành Ứng dụng Di động Android bằng Capacitor
+
+Dự án đã tích hợp sẵn nền tảng Android trong thư mục `android/`.
+
 ```bash
-# 1. Build ứng dụng web ra thư mục dist
-npm run build
+# 1. Build web và đồng bộ toàn bộ tài nguyên sang Android
+npm run cap:sync
 
-# 2. Thêm nền tảng Android (nếu chưa thêm)
-npx cap add android
-
-# 3. Đồng bộ web assets vào dự án Android
-npx cap sync android
-
-# 4. Mở Android Studio để xuất file APK cài đặt
-npx cap open android
+# 2. Mở dự án trong Android Studio
+npm run cap:open
 ```
+
+Trong Android Studio:
+- **Chạy ứng dụng:** Chọn thiết bị (máy ảo Pixel hoặc điện thoại thật) ➔ Bấm nút **Run (tam giác xanh ▶️)**.
+- **Xuất file APK cài đặt:** Vào menu **Build** > **Build Bundle(s) / APK(s)** > **Build APK(s)**.
+  - File APK hoàn chỉnh nằm tại: `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+> [!TIP]
+> **Cấu hình JDK khuyến nghị:** Trong Android Studio, vào `Settings` > `Build, Execution, Deployment` > `Build Tools` > `Gradle` và chọn **Gradle JDK** là **Java 21 (jbr-21)** hoặc **Java 17** để đảm bảo tương thích tốt nhất với Gradle 8.14.
 
 ---
 
