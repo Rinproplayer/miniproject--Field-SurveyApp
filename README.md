@@ -3,7 +3,7 @@
 > **Môn học:** Phát triển Ứng dụng Di động Đa nền tảng (Cross-Platform Mobile App Development)  
 > **Khoa:** Khoa Công nghệ Thông tin, Trường Đại học Công nghệ Thông tin & Truyền thông Việt - Hàn (VKU)  
 > **Giảng viên hướng dẫn:** TS. Nguyễn Thanh Tuấn  
-> **Sinh viên thực hiện:** Nguyễn Thanh Toàn (23ITB)  
+> **Sinh viên thực hiện:** Nguyễn Trung Nguyên (23IT.B143)  
 > **GitHub Repository:** [https://github.com/Rinproplayer/miniproject--Field-SurveyApp.git](https://github.com/Rinproplayer/miniproject--Field-SurveyApp.git)
 
 ---
